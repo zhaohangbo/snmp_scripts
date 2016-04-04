@@ -30,7 +30,7 @@ snmpEngine = engine.SnmpEngine()
 config.addTransport(
     snmpEngine,
     udp.domainName,
-    udp.UdpTransport().openServerMode(('10.10.10.11', 1602))
+    udp.UdpTransport().openServerMode(('10.157.8.243', 1602))
 )
 
 # SNMPv3/USM setup
@@ -88,8 +88,14 @@ def cbFun(snmpEngine, stateReference, contextEngineId, contextName,
         contextName.prettyPrint()
         )
     )
+    with open("./received.txt", "a") as myfile:
+	myfile.write('Notification from ContextEngineId "%s", ContextName "%s" \n' % 
+		(contextEngineId.prettyPrint(),contextName.prettyPrint())
+	)
     for name, val in varBinds:
         print('%s = %s' % (name.prettyPrint(), val.prettyPrint()))
+    	with open("./received.txt", "a") as myfile:
+        	myfile.write('%s = %s \n' % (name.prettyPrint(), val.prettyPrint()))
 
 # Register SNMP Application at the SNMP engine
 ntfrcv.NotificationReceiver(snmpEngine, cbFun)
